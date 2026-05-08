@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal | Dashboard</title>
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="../public/css/global.css" />
+    <link rel="stylesheet" href="../public/css/navigation.css" />
+    <link rel="stylesheet" href="../public/css/dashboard.css" />
+  </head>
+  <body class="bg-light">
+    <nav class="navbar">
+      <div class="logo" style="font-size: 1.5rem; color: var(--deep-green); font-weight: bold">
+        Admin Portal
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="admin-dashboard.html" class="active-nav">Patient Management</a></li>
+        <li><a href="system-logs.html">System Logs</a></li>
+        <li>
+<<<<<<< HEAD
+          <button class="btn-login" onclick="window.location.href = '../index.html'">Logout</button>
+=======
+          <button class="btn-login" onclick="window.location.href = 'index.html'">Logout</button>
+>>>>>>> aaca3155641ff0652439411160cd43b884b807fb
+        </li>
+      </ul>
+    </nav>
+
+    <div class="dashboard-container">
+      <header class="content-header">
+        <h2>Patient Management Overview</h2>
+        <p>Manage all incoming scheduling requests and patient registrations.</p>
+      </header>
+
+      <div class="table-responsive">
+        <table class="data-table" id="patientTable">
+          <thead>
+            <tr>
+              <th>Patient ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="patientBody">
+            <tr data-id="PT-2026-001">
+              <td data-label="Patient ID">PT-2026-001</td>
+              <td data-label="Name">Juan Dela Cruz</td>
+              <td data-label="Department">OPU Psychiatry</td>
+              <td data-label="Type">First Time</td>
+              <td data-label="Status"><span class="status-badge pending">Pending</span></td>
+              <td data-label="Action">
+                <button class="btn-action approve-btn">Approve</button>
+              </td>
+            </tr>
+            <tr data-id="PT-2026-002">
+              <td data-label="Patient ID">PT-2026-002</td>
+              <td data-label="Name">Maria Santos</td>
+              <td data-label="Department">Neurology</td>
+              <td data-label="Type">Returning</td>
+              <td data-label="Status"><span class="status-badge approved">Approved</span></td>
+              <td data-label="Action">
+                <button class="btn-action manage-btn">Manage</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modular JS -->
+    <script src="../public/js/utils.js"></script>
+    <script src="../public/js/navigation.js"></script>
+    <script src="../public/js/dashboard.js"></script>
+  </body>
+</html>

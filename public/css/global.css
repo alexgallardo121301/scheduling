@@ -1,0 +1,55 @@
+/* global.css */
+:root {
+  --primary-green: #2ecc71;
+  --dark-green: #27ae60;
+  --deep-green: #1b5e20;
+  --white: #ffffff;
+  --light-bg: #f4f9f6;
+  --border-color: #dcece2;
+  --brand-blue: #4a62c7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--white);
+  color: #333;
+  line-height: 1.6;
+}
+
+/* UTILITY BUTTONS & ANIMATIONS */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: color 0.3s ease;
+}
+
+.btn-back:hover {
+  color: var(--primary-green);
+}
+
+.btn-login:active,
+.btn-primary:active,
+.btn-secondary:active,
+.btn-action:active,
+.tab-btn:active,
+.btn-back:active,
+.btn-export:active,
+.btn-confirm-close:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}

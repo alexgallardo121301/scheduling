@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal | System Logs</title>
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="../public/css/global.css" />
+    <link rel="stylesheet" href="../public/css/navigation.css" />
+    <link rel="stylesheet" href="../public/css/dashboard.css" />
+  </head>
+  <body class="bg-light">
+    <nav class="navbar">
+      <div class="logo" style="font-size: 1.5rem; color: var(--deep-green); font-weight: bold">
+        Admin Portal
+      </div>
+      <ul class="nav-links">
+        <li><a href="admin-dashboard.html">Patient Management</a></li>
+        <li><a href="system-logs.html" class="active-nav">System Logs</a></li>
+<<<<<<< HEAD
+        <li><button class="btn-login" onclick="window.location.href = '../index.html'">Logout</button></li>
+=======
+        <li><button class="btn-login" onclick="window.location.href = 'index.html'">Logout</button></li>
+>>>>>>> aaca3155641ff0652439411160cd43b884b807fb
+      </ul>
+    </nav>
+
+    <div class="dashboard-container">
+      <h2>System Logs</h2>
+      <p>Audit trail of all administrative actions and system events.</p>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Action</th>
+              <th>User</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody id="logsBody">
+            <tr>
+              <td>2026-05-07 19:20</td>
+              <td>System Login</td>
+              <td>Admin</td>
+              <td>Admin successfully logged into the portal.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Modular JS -->
+    <script src="../public/js/utils.js"></script>
+    <script src="../public/js/navigation.js"></script>
+  </body>
+</html>

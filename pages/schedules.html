@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Schedules | C.O.R.E. SDN</title>
+    <link rel="stylesheet" href="../public/css/global.css" />
+    <link rel="stylesheet" href="../public/css/navigation.css" />
+    <link rel="stylesheet" href="../public/css/dashboard.css" />
+  </head>
+  <body class="bg-light">
+    <nav class="navbar">
+      <div class="logo">
+<<<<<<< HEAD
+        <a href="../index.html">
+=======
+        <a href="index.html">
+>>>>>>> aaca3155641ff0652439411160cd43b884b807fb
+          <img src="https://cdn.corenexis.com/files/c/7677583720.png" alt="C.O.R.E. Logo" />
+        </a>
+      </div>
+    </nav>
+
+    <main class="dashboard-container">
+      <div class="back-link-wrapper">
+<<<<<<< HEAD
+        <a href="../index.html" class="btn-back">← Back to Home</a>
+=======
+        <a href="index.html" class="btn-back">← Back to Home</a>
+>>>>>>> aaca3155641ff0652439411160cd43b884b807fb
+      </div>
+
+      <h2 class="schedule-title">Doctor Availability</h2>
+      <p class="schedule-subtitle">Real-time schedules for our medical professionals across all departments.</p>
+
+      <div class="schedule-tabs">
+        <button class="tab-btn active" onclick="openScheduleTab(event, 'psychiatry')">OPU Psychiatry</button>
+        <button class="tab-btn" onclick="openScheduleTab(event, 'neurology')">Neurology</button>
+        <button class="tab-btn" onclick="openScheduleTab(event, 'general')">General Management</button>
+      </div>
+
+      <div id="psychiatry" class="tab-content">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Schedule (Today)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Doctor Name">Dr. Alan Magno</td>
+                <td data-label="Specialization">Adult Psychiatry</td>
+                <td data-label="Schedule">08:00 AM - 12:00 PM</td>
+                <td data-label="Status"><span class="status-badge approved">Available</span></td>
+                <td data-label="Action">
+                  <button class="btn-action" onclick="window.location.href = 'patient-regis.html'">Book</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Doctor Name">Dr. Sarah Reyes</td>
+                <td data-label="Specialization">Child Psychiatry</td>
+                <td data-label="Schedule">01:00 PM - 05:00 PM</td>
+                <td data-label="Status"><span class="status-badge pending">Fully Booked</span></td>
+                <td data-label="Action">
+                  <button class="btn-action disabled-btn" disabled>Full</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="neurology" class="tab-content">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Schedule (Today)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Doctor Name">Dr. Emilio Cruz</td>
+                <td data-label="Specialization">Clinical Neurology</td>
+                <td data-label="Schedule">09:00 AM - 03:00 PM</td>
+                <td data-label="Status"><span class="status-badge approved">Available</span></td>
+                <td data-label="Action">
+                  <button class="btn-action" onclick="window.location.href = 'patient-regis.html'">Book</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="general" class="tab-content">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Schedule (Today)</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Doctor Name">Dr. Maria Santos</td>
+                <td data-label="Specialization">Internal Medicine</td>
+                <td data-label="Schedule">08:00 AM - 04:00 PM</td>
+                <td data-label="Status"><span class="status-badge approved">Available</span></td>
+                <td data-label="Action">
+                  <button class="btn-action" onclick="window.location.href = 'patient-regis.html'">Book</button>
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Doctor Name">Dr. Juan Dela Cruz</td>
+                <td data-label="Specialization">Family Medicine</td>
+                <td data-label="Schedule">--</td>
+                <td data-label="Status">
+                  <span class="status-badge leave-badge">On Leave</span>
+                </td>
+                <td data-label="Action">
+                  <button class="btn-action disabled-btn" disabled>Unavailable</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script src="../public/js/utils.js"></script>
+    <script src="../public/js/navigation.js"></script>
+  </body>
+</html>

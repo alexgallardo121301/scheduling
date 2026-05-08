@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage | SDN</title>
+    <!-- Modular CSS -->
+    <link rel="stylesheet" href="../public/css/global.css" />
+    <link rel="stylesheet" href="../public/css/navigation.css" />
+    <link rel="stylesheet" href="../public/css/landing.css" />
+  </head>
+  <body>
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+      <div class="logo">
+        <img src="https://cdn.corenexis.com/files/c/7677583720.png" alt="C.O.R.E. Logo" />
+      </div>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active-nav">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#location">Location</a></li>
+        <li>
+          <button class="btn-login" onclick="window.location.href = '../pages/login.html'">Login</button>
+        </li>
+      </ul>
+
+      <!-- Mobile Hamburger Menu -->
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1>Service Delivery Network <br />A Scheduling System.</h1>
+        <p>
+          Dedicated to your health, driven by excellence. Your seamless journey
+          to professional care starts here.
+        </p>
+        <div class="hero-btns">
+          <a href="../pages/patient-regis.html" class="btn-primary">Book Appointment</a>
+          <button class="btn-secondary" onclick="window.location.href = '../pages/schedules.html'">
+            View Schedules
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MINIMAL CONTENT SECTION -->
+    <main class="minimal-section" id="about">
+      <div class="minimal-container">
+        <img
+          src="https://cdn.corenexis.com/files/c/7295354720.jpg"
+          alt="Schedule your appointment and Contact Us"
+          class="info-banner-img"
+        />
+
+        <p class="minimal-text mt-2">
+          The Mariveles Mental Wellness and General Hospital (MMWGH) serves as a
+          Department of Health hospital, catering to the mental health needs of
+          Northern and Central Luzon. Currently operating under a Level 1
+          license (LTO No. 03-0171-24-H1-1), with 18 beds, MMWGH also offers
+          essential add-on services including a 500-bed custodial psychiatric
+          care unit, type-1 ambulance service, secondary clinical laboratory,
+          HIV-testing laboratory, and pharmacy.
+        </p>
+
+        <h2 class="minimal-heading">VISION</h2>
+        <p class="minimal-text">
+          Mariveles Mental Wellness and General Hospital is the premier
+          client-oriented DOH hospital, providing safe, efficient, and quality
+          services.
+        </p>
+
+        <h2 class="minimal-heading">MISSION</h2>
+        <p class="minimal-text">
+          To provide and advocate for quality mental and medical health care
+          through promotive, preventive, curative, and rehabilitative services
+          with equitable access to ensure the highest client satisfaction.
+        </p>
+
+        <h2 class="minimal-heading">CORE VALUES</h2>
+        <ul class="minimal-list">
+          <li>Fairness</li>
+          <li>Accountability</li>
+          <li>Continuous Improvement</li>
+        </ul>
+
+        <div id="location">
+          <h2 class="minimal-heading">LOCATION</h2>
+          <div class="map-wrapper">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3853.5188849495763!2d120.48512411536767!3d15.019483389536852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3396f7c461327863%3A0xc66579b29db3e067!2sCentral%20Luzon!5e0!3m2!1sen!2sph!4v1683904561234!5m2!1sen!2sph"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            >
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SIMPLE FOOTER -->
+    <footer class="footer">
+      <p>&copy; 2026 Service Delivery Network (C.O.R.E.). All Rights Reserved.</p>
+    </footer>
+
+    <!-- Modular JS -->
+    <script src="../public/js/utils.js"></script>
+    <script src="../public/js/navigation.js"></script>
+  </body>
+</html>
