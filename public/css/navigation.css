@@ -1,37 +1,43 @@
 /* navigation.css */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 5%;
-  background: var(--white);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  padding: 0 2rem;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--border-color);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  height: 80px;
-
-  font-size: 1.5rem; 
-  font-weight: bold; 
+  height: 68px;
+  margin-left: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
   color: var(--deep-green);
 }
 
-/* Add this to force the link wrapper to obey the 80px height */
 .logo a {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-/* Update the img rule with max-height */
 .logo img {
-  height: 100%;
-  max-height: 80px; 
+  height: 52px;
+  max-height: 52px;
   width: auto;
   display: block;
 }
@@ -49,9 +55,9 @@
 .nav-links a {
   text-decoration: none;
   color: #555;
-  font-size: 1.1rem;
-  font-weight: 600;
-  transition: 0.3s;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color var(--transition);
 }
 
 .nav-links a:hover {
@@ -64,20 +70,21 @@
 }
 
 .btn-login {
-  padding: 0.8rem 2rem;
+  padding: 0.7rem 1.8rem;
   background: transparent;
   border: 2px solid var(--primary-green);
   color: var(--primary-green);
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 1.1rem;
-  transition: 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background var(--transition), color var(--transition);
 }
 
 .btn-login:hover {
   background: var(--primary-green);
-  color: white;
+  color: var(--white);
 }
 
 .hamburger {
@@ -91,19 +98,27 @@
   height: 3px;
   background: var(--primary-green);
   margin: 5px;
+  border-radius: 2px;
+  transition: transform .3s ease, opacity .3s ease;
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
   .nav-links {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 70px;
+    top: 68px;
     left: 0;
     width: 100%;
-    background: white;
-    padding: 2rem;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    background: var(--white);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-top: 1px solid var(--border-color);
+    gap: 1rem;
   }
 
   .nav-links.active {

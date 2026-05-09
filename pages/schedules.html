@@ -9,129 +9,344 @@
     <link rel="stylesheet" href="../public/css/dashboard.css" />
   </head>
   <body class="bg-light">
+
     <nav class="navbar">
       <div class="logo">
-        <a href="../index.html">
         <a href="../index.html">
           <img src="https://cdn.corenexis.com/files/c/7677583720.png" alt="C.O.R.E. Logo" />
         </a>
       </div>
     </nav>
 
-    <main class="dashboard-container">
-      <div class="back-link-wrapper">
-        <a href="../index.html" class="btn-back">← Back to Home</a>
+    <main class="sched-page">
+
+      <a href="../index.html" class="btn-back">
+        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back to Home
+      </a>
+
+      <!-- Page header -->
+      <div class="sched-header">
+        <div>
+          <h1 class="sched-title">Doctor Availability</h1>
+          <p class="sched-subtitle">Real-time schedules for our medical professionals across all departments.</p>
+        </div>
+        <div class="live-clock-block">
+          <span class="clock-time" id="clockTime">--:-- --</span>
+          <span class="clock-date" id="clockDate">--</span>
+          <span class="live-label">
+            <span class="live-dot" aria-hidden="true"></span>
+            Live
+          </span>
+        </div>
       </div>
 
-      <h2 class="schedule-title">Doctor Availability</h2>
-      <p class="schedule-subtitle">Real-time schedules for our medical professionals across all departments.</p>
-
-      <div class="schedule-tabs">
-        <button class="tab-btn active" onclick="openScheduleTab(event, 'psychiatry')">OPU Psychiatry</button>
-        <button class="tab-btn" onclick="openScheduleTab(event, 'neurology')">Neurology</button>
-        <button class="tab-btn" onclick="openScheduleTab(event, 'general')">General Management</button>
+      <!-- Summary stat cards -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-icon icon-green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <p class="summary-label">Total Doctors</p>
+            <p class="summary-value" id="statTotal">—</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon icon-green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div>
+            <p class="summary-label">Available</p>
+            <p class="summary-value" id="statAvail">—</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon icon-amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div>
+            <p class="summary-label">Fully Booked</p>
+            <p class="summary-value" id="statBooked">—</p>
+          </div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon icon-red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div>
+            <p class="summary-label">On Leave</p>
+            <p class="summary-value" id="statLeave">—</p>
+          </div>
+        </div>
       </div>
 
+      <!-- Refresh notice -->
+      <div class="refresh-banner" id="refreshBanner" role="status" aria-live="polite">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Schedules refreshed just now.
+      </div>
+
+      <!-- Tabs row -->
+      <div class="tabs-row">
+        <div class="tabs-group">
+          <button class="tab-btn active" onclick="openScheduleTab(event, 'psychiatry')">OPU Psychiatry</button>
+          <button class="tab-btn" onclick="openScheduleTab(event, 'neurology')">Neurology</button>
+          <button class="tab-btn" onclick="openScheduleTab(event, 'general')">General Management</button>
+        </div>
+        <span class="last-updated">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+          Updated: <span id="updatedTime">—</span>
+        </span>
+      </div>
+
+      <!-- OPU Psychiatry -->
       <div id="psychiatry" class="tab-content">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Doctor Name</th>
-                <th>Specialization</th>
-                <th>Schedule (Today)</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Doctor Name">Dr. Alan Magno</td>
-                <td data-label="Specialization">Adult Psychiatry</td>
-                <td data-label="Schedule">08:00 AM - 12:00 PM</td>
-                <td data-label="Status"><span class="status-badge approved">Available</span></td>
-                <td data-label="Action">
-                  <button class="btn-action" onclick="window.location.href = '../pages/patient-regis.html'">Book</button>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Doctor Name">Dr. Sarah Reyes</td>
-                <td data-label="Specialization">Child Psychiatry</td>
-                <td data-label="Schedule">01:00 PM - 05:00 PM</td>
-                <td data-label="Status"><span class="status-badge pending">Fully Booked</span></td>
-                <td data-label="Action">
-                  <button class="btn-action disabled-btn" disabled>Full</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Doctor</th>
+                  <th>Specialization</th>
+                  <th>Schedule (Today)</th>
+                  <th>Slots</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Doctor">
+                    <div class="doctor-cell">
+                      <div class="avatar av-a">AM</div>
+                      <div>
+                        <p class="doctor-name">Dr. Alan Magno</p>
+                        <p class="doctor-spec">Adult Psychiatry</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td data-label="Specialization">Adult Psychiatry</td>
+                  <td data-label="Schedule">
+                    <div class="time-cell">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      08:00 AM – 12:00 PM
+                    </div>
+                  </td>
+                  <td data-label="Slots">
+                    <div class="slots-bar"><div class="slots-fill fill-green" style="width:45%"></div></div>
+                    <p class="slots-text">9 / 20 booked</p>
+                  </td>
+                  <td data-label="Status">
+                    <span class="status-badge badge-available">
+                      <span class="status-dot" aria-hidden="true"></span>Available
+                    </span>
+                  </td>
+                  <td data-label="Action">
+                    <button class="btn-action" onclick="window.location.href='../pages/patient-regis.html'">Book Now</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Doctor">
+                    <div class="doctor-cell">
+                      <div class="avatar av-b">SR</div>
+                      <div>
+                        <p class="doctor-name">Dr. Sarah Reyes</p>
+                        <p class="doctor-spec">Child Psychiatry</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td data-label="Specialization">Child Psychiatry</td>
+                  <td data-label="Schedule">
+                    <div class="time-cell">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      01:00 PM – 05:00 PM
+                    </div>
+                  </td>
+                  <td data-label="Slots">
+                    <div class="slots-bar"><div class="slots-fill fill-red" style="width:100%"></div></div>
+                    <p class="slots-text">20 / 20 booked</p>
+                  </td>
+                  <td data-label="Status">
+                    <span class="status-badge badge-booked">
+                      <span class="status-dot" aria-hidden="true"></span>Fully Booked
+                    </span>
+                  </td>
+                  <td data-label="Action">
+                    <button class="btn-action disabled-btn" disabled>Full</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
+      <!-- Neurology -->
       <div id="neurology" class="tab-content">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Doctor Name</th>
-                <th>Specialization</th>
-                <th>Schedule (Today)</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Doctor Name">Dr. Emilio Cruz</td>
-                <td data-label="Specialization">Clinical Neurology</td>
-                <td data-label="Schedule">09:00 AM - 03:00 PM</td>
-                <td data-label="Status"><span class="status-badge approved">Available</span></td>
-                <td data-label="Action">
-                  <button class="btn-action" onclick="window.location.href = '../pages/patient-regis.html'">Book</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Doctor</th>
+                  <th>Specialization</th>
+                  <th>Schedule (Today)</th>
+                  <th>Slots</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Doctor">
+                    <div class="doctor-cell">
+                      <div class="avatar av-c">EC</div>
+                      <div>
+                        <p class="doctor-name">Dr. Emilio Cruz</p>
+                        <p class="doctor-spec">Clinical Neurology</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td data-label="Specialization">Clinical Neurology</td>
+                  <td data-label="Schedule">
+                    <div class="time-cell">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      09:00 AM – 03:00 PM
+                    </div>
+                  </td>
+                  <td data-label="Slots">
+                    <div class="slots-bar"><div class="slots-fill fill-amber" style="width:65%"></div></div>
+                    <p class="slots-text">13 / 20 booked</p>
+                  </td>
+                  <td data-label="Status">
+                    <span class="status-badge badge-available">
+                      <span class="status-dot" aria-hidden="true"></span>Available
+                    </span>
+                  </td>
+                  <td data-label="Action">
+                    <button class="btn-action" onclick="window.location.href='../pages/patient-regis.html'">Book Now</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
+      <!-- General Management -->
       <div id="general" class="tab-content">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Doctor Name</th>
-                <th>Specialization</th>
-                <th>Schedule (Today)</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Doctor Name">Dr. Maria Santos</td>
-                <td data-label="Specialization">Internal Medicine</td>
-                <td data-label="Schedule">08:00 AM - 04:00 PM</td>
-                <td data-label="Status"><span class="status-badge approved">Available</span></td>
-                <td data-label="Action">
-                  <button class="btn-action" onclick="window.location.href = '../pages/patient-regis.html'">Book</button>
-                </td>
-              </tr>
-              <tr>
-                <td data-label="Doctor Name">Dr. Juan Dela Cruz</td>
-                <td data-label="Specialization">Family Medicine</td>
-                <td data-label="Schedule">--</td>
-                <td data-label="Status">
-                  <span class="status-badge leave-badge">On Leave</span>
-                </td>
-                <td data-label="Action">
-                  <button class="btn-action disabled-btn" disabled>Unavailable</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Doctor</th>
+                  <th>Specialization</th>
+                  <th>Schedule (Today)</th>
+                  <th>Slots</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Doctor">
+                    <div class="doctor-cell">
+                      <div class="avatar av-d">MS</div>
+                      <div>
+                        <p class="doctor-name">Dr. Maria Santos</p>
+                        <p class="doctor-spec">Internal Medicine</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td data-label="Specialization">Internal Medicine</td>
+                  <td data-label="Schedule">
+                    <div class="time-cell">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      08:00 AM – 04:00 PM
+                    </div>
+                  </td>
+                  <td data-label="Slots">
+                    <div class="slots-bar"><div class="slots-fill fill-green" style="width:30%"></div></div>
+                    <p class="slots-text">6 / 20 booked</p>
+                  </td>
+                  <td data-label="Status">
+                    <span class="status-badge badge-available">
+                      <span class="status-dot" aria-hidden="true"></span>Available
+                    </span>
+                  </td>
+                  <td data-label="Action">
+                    <button class="btn-action" onclick="window.location.href='../pages/patient-regis.html'">Book Now</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Doctor">
+                    <div class="doctor-cell">
+                      <div class="avatar av-e">JD</div>
+                      <div>
+                        <p class="doctor-name">Dr. Juan Dela Cruz</p>
+                        <p class="doctor-spec">Family Medicine</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td data-label="Specialization">Family Medicine</td>
+                  <td data-label="Schedule">
+                    <div class="time-cell muted">
+                      <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      Not scheduled
+                    </div>
+                  </td>
+                  <td data-label="Slots"><span class="muted">—</span></td>
+                  <td data-label="Status">
+                    <span class="status-badge badge-leave">
+                      <span class="status-dot" aria-hidden="true"></span>On Leave
+                    </span>
+                  </td>
+                  <td data-label="Action">
+                    <button class="btn-action disabled-btn" disabled>Unavailable</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+
     </main>
 
     <script src="../public/js/utils.js"></script>
