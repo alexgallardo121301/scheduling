@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ageInput = document.getElementById("age");
   const patientType = document.getElementById("patientType");
   const appointmentType = document.getElementById("appointmentType");
+  const consultationMode = document.getElementById("consultationMode"); // Added reference
   const regForm = document.getElementById("regForm");
 
   // 1. Auto-calculate age from birthdate
@@ -23,24 +24,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. Forced Walk-in for first-time patients
-  if (patientType && appointmentType) {
+  // 2. Forced restrictions for first-time patients
+  if (patientType && appointmentType && consultationMode) {
     patientType.addEventListener("change", () => {
       if (patientType.value === "first-time") {
+        
+        // Force Walk-in
         appointmentType.value = "walk-in";
         Array.from(appointmentType.options).forEach((opt) => {
           if (opt.value === "online") opt.disabled = true;
         });
-        alert("Note: First-time patients are required to register as Walk-ins for initial assessment.");
+
+        // Force Face-to-Face Consultation
+        consultationMode.value = "Face-to-Face";
+        Array.from(consultationMode.options).forEach((opt) => {
+          if (opt.value === "E-consultation" || opt.text === "E-consultation") {
+            opt.disabled = true;
+          }
+        });
+
+        alert("Note: First-time patients are required to register as Walk-ins and have Face-to-Face consultations for their initial assessment.");
+      
       } else {
+        
+        // Enable all options for Returning Patients
         Array.from(appointmentType.options).forEach(
           (opt) => (opt.disabled = false)
         );
+        Array.from(consultationMode.options).forEach(
+          (opt) => (opt.disabled = false)
+        );
+
       }
     });
   }
 
-  // 3. FORM SUBMISSION (BUG FIXED: Un-nested from birthdate logic)
+  // 3. FORM SUBMISSION
   if (regForm) {
     regForm.addEventListener("submit", (e) => {
       e.preventDefault(); // Stop page from refreshing instantly
