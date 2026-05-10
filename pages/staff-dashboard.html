@@ -8,160 +8,204 @@
     <link rel="stylesheet" href="../public/css/navigation.css" />
     <link rel="stylesheet" href="../public/css/dashboard.css" />
     <link rel="stylesheet" href="../public/css/modal-export.css" />
-    
     <link rel="stylesheet" href="../public/css/forms.css" />
   </head>
   <body class="bg-light">
-    <nav class="navbar">
+
+    <!-- ── Navbar ── -->
+    <nav class="navbar" id="navbar">
       <div class="logo">Medical Staff Portal</div>
-      <ul class="nav-links">
+      <ul class="nav-links" id="navLinks">
         <li>
           <button class="btn-login" onclick="window.location.href = '../index.html'">Logout</button>
         </li>
       </ul>
     </nav>
 
-    <div class="dashboard-container">
-      <header>
-        <h2>Patient Records & Scheduling</h2>
-        <p>Manage clinical notes, assign doctors, and handle patient schedules.</p>
-      </header>
-      
-      <div class="table-responsive">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Record ID</th>
-              <th>Patient Name</th>
-              <th>Pref. Date</th>
-              <th>Diagnosis / Progress</th>
-              <th>Attending Doctor</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="recordsBody">
-            <tr data-id="REC-8842" data-prefdate="2026-05-10" data-assigneddate="">
-              <td data-label="Record ID">REC-8842</td>
-              <td data-label="Name">Jose Rizal</td>
-              <td data-label="Pref. Date">May 10, 2026</td>
-              <td data-label="Diagnosis">Pending Initial Assessment</td>
-              <td data-label="Attending">Unassigned</td>
-              <td data-label="Action">
-                <div class="action-buttons">
-                  <button class="btn-action view-btn">History</button>
-                  <button class="btn-action update-btn">Update</button>
-                  <button class="btn-action assign-btn">Assign</button>
-                  <button class="btn-action remind-btn">Remind</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- ── Page content ── -->
+    <div class="page-wrapper">
+
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Patient Records &amp; Scheduling</h2>
+          <p class="page-subtitle">Manage clinical notes, assign doctors, and handle patient schedules.</p>
+        </div>
       </div>
-    </div>
-    
+
+      <div class="table-card">
+
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              id="staffSearch"
+              class="search-input"
+              placeholder="Search records…"
+            />
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="recordsTable">
+            <thead>
+              <tr>
+                <th>Record ID</th>
+                <th>Patient Name</th>
+                <th>Pref. Date</th>
+                <th>Diagnosis / Progress</th>
+                <th>Attending Doctor</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <tr data-id="REC-8842" data-prefdate="2026-05-10" data-assigneddate="">
+                <td data-label="Record ID">REC-8842</td>
+                <td data-label="Name">Jose Rizal</td>
+                <td data-label="Pref. Date">May 10, 2026</td>
+                <td data-label="Diagnosis">Pending Initial Assessment</td>
+                <td data-label="Attending">Unassigned</td>
+                <td data-label="Action">
+                  <div class="action-group">
+                    <button class="btn-action view-btn">History</button>
+                    <button class="btn-action update-btn">Update</button>
+                    <button class="btn-action assign-btn">Assign</button>
+                    <button class="btn-action remind-btn">Remind</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <p class="row-count" id="rowCount">Showing <strong>1</strong> record</p>
+        </div>
+
+      </div><!-- /.table-card -->
+    </div><!-- /.page-wrapper -->
+
+    <!-- ── Action Modal ── -->
     <div id="actionModal" class="modal-overlay">
       <div class="modal-box">
+
         <div class="print-header">
-            <div class="print-header-inner">
-                <div class="print-header-content">
-                    <h3 id="modalTitle" class="print-clinic-name">Patient Record Details</h3>
-                    <p id="modalPatientInfo" class="print-ref"></p>
-                </div>
+          <div class="print-header-inner">
+            <div class="print-header-content">
+              <h3 id="modalTitle" class="print-clinic-name">Patient Record Details</h3>
+              <p id="modalPatientInfo" class="print-ref"></p>
             </div>
+          </div>
         </div>
-        
+
         <div class="print-body">
+
+          <!-- History -->
           <div id="viewSection">
             <div class="print-section">
-                <p class="print-section-title">Past Medical Consultations</p>
-                <div class="print-value" id="historyContent"></div>
+              <p class="print-section-title">Past Medical Consultations</p>
+              <div class="print-value" id="historyContent"></div>
             </div>
           </div>
 
+          <!-- Update -->
           <div id="updateSection">
             <div class="print-section">
-                <p class="print-section-title">New Progress Note</p>
-                <textarea id="progressInput" rows="5" placeholder="Enter clinical observations, medication updates..."></textarea>
+              <p class="print-section-title">New Progress Note</p>
+              <textarea id="progressInput" rows="5" placeholder="Enter clinical observations, medication updates…"></textarea>
             </div>
           </div>
 
+          <!-- Assign -->
           <div id="assignSection">
             <div class="print-section">
-                <p class="print-section-title">Doctor Assignment & Scheduling</p>
-                
-                <div class="form-group">
-                    <label>Patient's Preferred Date</label>
-                    <input type="date" id="prefDate" readonly>
-                </div>
+              <p class="print-section-title">Doctor Assignment &amp; Scheduling</p>
 
-                <div class="form-group">
-                    <label>Select Available Doctor</label>
-                    <select id="doctorSelect">
-                        <option value="">-- Choose a Doctor --</option>
-                        <option value="Dr. Alonzo" data-avail="2026-05-10">Dr. Alonzo (Avail: May 10)</option>
-                        <option value="Dr. Reyes" data-avail="2026-05-12">Dr. Reyes (Avail: May 12)</option>
-                        <option value="Dr. Santos" data-avail="2026-05-15">Dr. Santos (Avail: May 15)</option>
-                    </select>
-                </div>
+              <div class="form-group">
+                <label>Patient's Preferred Date</label>
+                <input type="date" id="prefDate" readonly />
+              </div>
 
-                <div class="form-group">
-                    <label>Scheduled Appointment Date</label>
-                    <input type="date" id="assignedDate" readonly>
-                </div>
+              <div class="form-group">
+                <label>Select Available Doctor</label>
+                <select id="doctorSelect">
+                  <option value="">-- Choose a Doctor --</option>
+                  <option value="Dr. Alonzo" data-avail="2026-05-10">Dr. Alonzo (Avail: May 10)</option>
+                  <option value="Dr. Reyes"  data-avail="2026-05-12">Dr. Reyes (Avail: May 12)</option>
+                  <option value="Dr. Santos" data-avail="2026-05-15">Dr. Santos (Avail: May 15)</option>
+                </select>
+              </div>
 
-                <div class="form-group">
-                    <label>Notification Method (if mismatch occurs)</label>
-                    <select id="notifyMethod">
-                        <option value="Email">Email</option>
-                        <option value="SMS">SMS Text Message</option>
-                        <option value="Email & SMS">Both Email & SMS</option>
-                    </select>
-                </div>
+              <div class="form-group">
+                <label>Scheduled Appointment Date</label>
+                <input type="date" id="assignedDate" readonly />
+              </div>
+
+              <div class="form-group">
+                <label>Notification Method (if mismatch occurs)</label>
+                <select id="notifyMethod">
+                  <option value="Email">Email</option>
+                  <option value="SMS">SMS Text Message</option>
+                  <option value="Email &amp; SMS">Both Email &amp; SMS</option>
+                </select>
+              </div>
+
+              <!-- Mismatch warning banner (hidden until needed) -->
+              <div id="mismatchBanner" style="display:none; margin-top:10px; padding:10px 14px; background:#fff8e6; border:1px solid #f5c45e; border-radius:6px; font-size:.85rem; color:#7a4f00; line-height:1.5;"></div>
             </div>
           </div>
 
+          <!-- Remind -->
           <div id="remindSection">
             <div class="print-section">
-                <p class="print-section-title">Schedule Automated Reminder</p>
-                
-                <div class="form-group">
-                    <label>Current Scheduled Date</label>
-                    <input type="text" id="remindDateDisplay" readonly>
-                </div>
+              <p class="print-section-title">Schedule Automated Reminder</p>
 
-                <div class="form-group">
-                    <label>Send Reminder</label>
-                    <select id="remindInterval">
-                        <option value="3 days">3 Days Before Schedule</option>
-                        <option value="2 days">2 Days Before Schedule</option>
-                        <option value="1 day">1 Day Before Schedule</option>
-                    </select>
-                </div>
+              <div class="form-group">
+                <label>Current Scheduled Date</label>
+                <input type="text" id="remindDateDisplay" readonly />
+              </div>
 
-                <div class="form-group">
-                    <label>Notification Method</label>
-                    <select id="remindMethod">
-                        <option value="Email">Email</option>
-                        <option value="SMS">SMS Text Message</option>
-                        <option value="Email & SMS">Both Email & SMS</option>
-                    </select>
-                </div>
+              <div class="form-group">
+                <label>Send Reminder</label>
+                <select id="remindInterval">
+                  <option value="3 days">3 Days Before Schedule</option>
+                  <option value="2 days">2 Days Before Schedule</option>
+                  <option value="1 day">1 Day Before Schedule</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Notification Method</label>
+                <select id="remindMethod">
+                  <option value="Email">Email</option>
+                  <option value="SMS">SMS Text Message</option>
+                  <option value="Email &amp; SMS">Both Email &amp; SMS</option>
+                </select>
+              </div>
             </div>
           </div>
 
-        </div>
+        </div><!-- /.print-body -->
 
         <div class="modal-actions">
-          <button id="saveBtn" class="btn-confirm-close">Save Changes</button>
+          <button id="saveBtn"    class="btn-confirm-close">Save Changes</button>
           <button id="closeModal" class="btn-export">Close Window</button>
         </div>
-      </div>
+
+      </div><!-- /.modal-box -->
+    </div><!-- /#actionModal -->
+
+    <!-- ── Toast ── -->
+    <div class="toast" id="successToast" role="alert" aria-live="polite">
+      <span class="toast-icon">✓</span>
+      <span id="toastMsg">Action completed successfully.</span>
     </div>
 
     <script src="../public/js/utils.js"></script>
     <script src="../public/js/navigation.js"></script>
     <script src="../public/js/dashboard.js"></script>
-    <script src="../public/js/staff-logic.js"></script> 
+    <script src="../public/js/staff-logic.js"></script>
   </body>
 </html>

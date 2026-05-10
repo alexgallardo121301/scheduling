@@ -4,73 +4,259 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Portal | Dashboard</title>
-    <!-- Modular CSS -->
     <link rel="stylesheet" href="../public/css/global.css" />
     <link rel="stylesheet" href="../public/css/navigation.css" />
     <link rel="stylesheet" href="../public/css/dashboard.css" />
   </head>
   <body class="bg-light">
-    <nav class="navbar">
-      <div class="logo" style="font-size: 1.5rem; color: var(--deep-green); font-weight: bold">
+
+    <!-- ── Navbar ── -->
+    <nav class="navbar" id="navbar">
+      <a class="logo" href="#">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#2ecc71" fill-opacity=".12"/>
+          <path d="M16 7v18M7 16h18" stroke="#1b5e20" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="16" cy="16" r="4" fill="#2ecc71" fill-opacity=".3"/>
+        </svg>
         Admin Portal
-      </div>
-      <div class="hamburger" id="hamburger">
+      </a>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
-      </div>
-      <ul class="nav-links" id="navLinks">
+      </button>
+
+      <ul class="nav-links" id="navLinks" role="list">
         <li><a href="admin-dashboard.html" class="active-nav">Patient Management</a></li>
         <li><a href="system-logs.html">System Logs</a></li>
         <li>
-          <button class="btn-login" onclick="window.location.href = '../index.html'">Logout</button>
+          <button class="btn-login" onclick="window.location.href='../index.html'">Logout</button>
         </li>
       </ul>
     </nav>
 
-    <div class="dashboard-container">
-      <header class="content-header">
-        <h2>Patient Management Overview</h2>
-        <p>Manage all incoming scheduling requests and patient registrations.</p>
+    <!-- ── Toast ── -->
+    <div class="toast" id="successToast" role="alert" aria-live="assertive">
+      <span class="toast-icon">✓</span>
+      <span class="toast-msg" id="toastMsg">Action completed successfully.</span>
+    </div>
+
+    <!-- ── Page ── -->
+    <main class="page-wrapper">
+
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="page-header-left">
+          <h1 class="page-title">Patient Management</h1>
+          <p class="page-subtitle">Manage all incoming scheduling requests and patient registrations.</p>
+        </div>
+        <div class="page-header-right">
+          <button class="btn-export" id="exportBtn" title="Export table as CSV">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 3v10M6 9l4 4 4-4M4 17h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Export
+          </button>
+        </div>
       </header>
 
-      <div class="table-responsive">
-        <table class="data-table" id="patientTable">
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Name</th>
-              <th>Department</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="patientBody">
-            <tr data-id="PT-2026-001">
-              <td data-label="Patient ID">PT-2026-001</td>
-              <td data-label="Name">Juan Dela Cruz</td>
-              <td data-label="Department">OPU Psychiatry</td>
-              <td data-label="Type">First Time</td>
-              <td data-label="Status"><span class="status-badge pending">Pending</span></td>
-              <td data-label="Action">
-                <button class="btn-action approve-btn">Approve</button>
-              </td>
-            </tr>
-            <tr data-id="PT-2026-002">
-              <td data-label="Patient ID">PT-2026-002</td>
-              <td data-label="Name">Maria Santos</td>
-              <td data-label="Department">Neurology</td>
-              <td data-label="Type">Returning</td>
-              <td data-label="Status"><span class="status-badge approved">Approved</span></td>
-              <td data-label="Action">
-                <button class="btn-action manage-btn">Manage</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Summary Cards -->
+      <div class="stat-grid" id="statGrid">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p class="stat-label">Total Patients</p>
+            <p class="stat-value" id="statTotal">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">
+            <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p class="stat-label">Pending</p>
+            <p class="stat-value" id="statPending">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-green">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4.5 4.5L16 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <p class="stat-label">Approved</p>
+            <p class="stat-value" id="statApproved">0</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-red">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 18a6 6 0 0 1 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M13 14l4 4m0-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <p class="stat-label">Rejected</p>
+            <p class="stat-value" id="statRejected">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="table-card">
+
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="m13.5 13.5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <input class="search-input" id="searchInput" type="search" placeholder="Search patients…" autocomplete="off" />
+          </div>
+
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="approved">Approved</button>
+            <button class="filter-btn" data-filter="rejected">Rejected</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="patientTable">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="patientBody">
+              <tr data-id="PT-2026-001" data-status="pending">
+                <td data-label="Patient ID">
+                  <span class="patient-id">PT-2026-001</span>
+                </td>
+                <td data-label="Name">
+                  <div class="patient-cell">
+                    <div class="avatar av-a">JD</div>
+                    <span class="patient-name">Juan Dela Cruz</span>
+                  </div>
+                </td>
+                <td data-label="Department">
+                  <span class="dept-tag">OPU Psychiatry</span>
+                </td>
+                <td data-label="Type">
+                  <span class="type-badge first-time">First Time</span>
+                </td>
+                <td data-label="Status">
+                  <span class="status-badge pending">
+                    <span class="status-dot"></span>Pending
+                  </span>
+                </td>
+                <td data-label="Action">
+                  <div class="action-group">
+                    <button class="btn-action approve-btn" title="Approve patient">Approve</button>
+                    <button class="btn-action reject-btn" title="Reject patient">Reject</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-id="PT-2026-002" data-status="approved">
+                <td data-label="Patient ID">
+                  <span class="patient-id">PT-2026-002</span>
+                </td>
+                <td data-label="Name">
+                  <div class="patient-cell">
+                    <div class="avatar av-b">MS</div>
+                    <span class="patient-name">Maria Santos</span>
+                  </div>
+                </td>
+                <td data-label="Department">
+                  <span class="dept-tag">Neurology</span>
+                </td>
+                <td data-label="Type">
+                  <span class="type-badge returning">Returning</span>
+                </td>
+                <td data-label="Status">
+                  <span class="status-badge approved">
+                    <span class="status-dot"></span>Approved
+                  </span>
+                </td>
+                <td data-label="Action">
+                  <div class="action-group">
+                    <button class="btn-action manage-btn" title="Manage patient">Manage</button>
+                  </div>
+                </td>
+              </tr>
+              <tr data-id="PT-2026-003" data-status="pending">
+                <td data-label="Patient ID">
+                  <span class="patient-id">PT-2026-003</span>
+                </td>
+                <td data-label="Name">
+                  <div class="patient-cell">
+                    <div class="avatar av-c">RL</div>
+                    <span class="patient-name">Ricardo Lopez</span>
+                  </div>
+                </td>
+                <td data-label="Department">
+                  <span class="dept-tag">Cardiology</span>
+                </td>
+                <td data-label="Type">
+                  <span class="type-badge first-time">First Time</span>
+                </td>
+                <td data-label="Status">
+                  <span class="status-badge pending">
+                    <span class="status-dot"></span>Pending
+                  </span>
+                </td>
+                <td data-label="Action">
+                  <div class="action-group">
+                    <button class="btn-action approve-btn" title="Approve patient">Approve</button>
+                    <button class="btn-action reject-btn" title="Reject patient">Reject</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty state (hidden by default) -->
+        <div class="empty-state" id="emptyState" hidden>
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" fill="#e8f8f0"/>
+            <path d="M22 32h20M32 22v20" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <p class="empty-title">No patients found</p>
+          <p class="empty-sub">Try adjusting your search or filter.</p>
+        </div>
+
+        <!-- Table footer -->
+        <div class="table-footer">
+          <span class="row-count" id="rowCount">Showing <strong>3</strong> patients</span>
+          <span class="last-updated-label">
+            <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Updated <span id="updatedTime">—</span>
+          </span>
+        </div>
+
+      </div><!-- /table-card -->
+    </main>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+      <div class="modal-card">
+        <div class="modal-icon" id="modalIcon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="modal-title" id="modalTitle">Confirm Action</h3>
+        <p class="modal-body" id="modalBody">Are you sure?</p>
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" id="modalCancel">Cancel</button>
+          <button class="btn-modal-confirm" id="modalConfirm">Confirm</button>
+        </div>
       </div>
     </div>
 
-    <!-- Modular JS -->
     <script src="../public/js/utils.js"></script>
     <script src="../public/js/navigation.js"></script>
     <script src="../public/js/dashboard.js"></script>
