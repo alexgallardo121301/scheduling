@@ -17,7 +17,7 @@
       <div class="logo">Medical Staff Portal</div>
       <ul class="nav-links" id="navLinks">
         <li>
-          <button class="btn-login" onclick="window.location.href = '../index.html'">Logout</button>
+          <button class="btn-logout" onclick="window.location.href = '../index.html'">Logout</button>
         </li>
       </ul>
     </nav>
@@ -27,7 +27,7 @@
 
       <div class="page-header">
         <div>
-          <h2 class="page-title">Patient Records &amp; Scheduling</h2>
+          <h2 class="page-title">Patient Records & Scheduling</h2>
           <p class="page-subtitle">Manage clinical notes, assign doctors, and handle patient schedules.</p>
         </div>
       </div>
@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive" id="staffTableWrap">
           <table class="data-table" id="recordsTable">
             <thead>
               <tr>
@@ -121,7 +121,7 @@
           <!-- Assign -->
           <div id="assignSection">
             <div class="print-section">
-              <p class="print-section-title">Doctor Assignment &amp; Scheduling</p>
+              <p class="print-section-title">Doctor Assignment & Scheduling</p>
 
               <div class="form-group">
                 <label>Patient's Preferred Date</label>
@@ -148,7 +148,7 @@
                 <select id="notifyMethod">
                   <option value="Email">Email</option>
                   <option value="SMS">SMS Text Message</option>
-                  <option value="Email &amp; SMS">Both Email &amp; SMS</option>
+                  <option value="Email & SMS">Both Email & SMS</option>
                 </select>
               </div>
 
@@ -181,7 +181,7 @@
                 <select id="remindMethod">
                   <option value="Email">Email</option>
                   <option value="SMS">SMS Text Message</option>
-                  <option value="Email &amp; SMS">Both Email &amp; SMS</option>
+                  <option value="Email & SMS">Both Email & SMS</option>
                 </select>
               </div>
             </div>

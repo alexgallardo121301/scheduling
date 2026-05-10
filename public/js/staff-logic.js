@@ -5,17 +5,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal       = document.getElementById("actionModal");
 
   // Modal sections
-  const viewSection   = document.getElementById("viewSection");
-  const updateSection = document.getElementById("updateSection");
-  const assignSection = document.getElementById("assignSection");
-  const remindSection = document.getElementById("remindSection");
+  const viewSection    = document.getElementById("viewSection");
+  const updateSection  = document.getElementById("updateSection");
+  const assignSection  = document.getElementById("assignSection");
+  const remindSection  = document.getElementById("remindSection");
 
-  const saveBtn       = document.getElementById("saveBtn");
+  const saveBtn        = document.getElementById("saveBtn");
   const mismatchBanner = document.getElementById("mismatchBanner");
 
   let activeRow = null;
 
-  // ── Helper: hide all sections ──────────────────────────────────────────
+  // ── In-memory progress-note log keyed by Record ID ────────────────────
+  // Seeded with the initial diagnosis text shown in the table on page load.
+  const notesLog = {};
+
+  function seedNotes() {
+    if (!recordsBody) return;
+    recordsBody.querySelectorAll("tr").forEach(row => {
+      const id   = row.cells[0]?.innerText.trim();
+      const diag = row.cells[3]?.innerText.trim();
+      if (id && diag) {
+        notesLog[id] = [{ date: "Initial Record", text: diag }];
+      }
+    });
+  }
+  seedNotes();
+
+  // ── Helper: hide all modal sections ───────────────────────────────────
   function hideAllSections() {
     viewSection.style.display   = "none";
     updateSection.style.display = "none";
@@ -24,15 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (mismatchBanner) mismatchBanner.style.display = "none";
   }
 
-  // ── Open modal ─────────────────────────────────────────────────────────
-  function openModal() {
-    modal.style.display = "flex";
-  }
-
-  // ── Close modal ────────────────────────────────────────────────────────
-  function closeModal() {
-    modal.style.display = "none";
-  }
+  function openModal()  { modal.style.display = "flex"; }
+  function closeModal() { modal.style.display = "none"; }
 
   // ── Table button delegation ────────────────────────────────────────────
   if (recordsBody) {
@@ -41,45 +50,52 @@ document.addEventListener("DOMContentLoaded", () => {
       activeRow = target.closest("tr");
       if (!activeRow) return;
 
-      const recordId        = activeRow.cells[0].innerText.trim();
-      const patientName     = activeRow.cells[1].innerText.trim();
+      const recordId         = activeRow.cells[0].innerText.trim();
+      const patientName      = activeRow.cells[1].innerText.trim();
       const currentDiagnosis = activeRow.cells[3].innerText.trim();
 
       document.getElementById("modalPatientInfo").innerText =
         `${patientName} | ${recordId}`;
 
-      // ── 1. VIEW HISTORY ──────────────────────────────────────────────
+      // ── 1. VIEW HISTORY ────────────────────────────────────────────
       if (target.classList.contains("view-btn")) {
         document.getElementById("modalTitle").innerText = "Consultation History";
-        document.getElementById("historyContent").innerHTML = `
-          <small style="color:#666;">Current Status:</small><br>
-          ${currentDiagnosis}<br><br>
-          <small style="color:#666;">April 10, 2026:</small><br>
-          Routine check-up. Patient reported minor fatigue.
-        `;
+
+        const entries = notesLog[recordId] || [{ date: "Initial Record", text: currentDiagnosis }];
+        const html = entries.map((entry, i) => `
+          <div style="margin-bottom:10px; padding-bottom:10px;
+               ${i < entries.length - 1 ? "border-bottom:1px solid var(--border-color);" : ""}">
+            <small style="color:#888; font-weight:600;">${entry.date}</small><br>
+            <span style="font-size:.9rem;">${entry.text}</span>
+          </div>
+        `).join("");
+
+        document.getElementById("historyContent").innerHTML = html ||
+          '<span style="color:var(--muted);font-size:.88rem;">No records found.</span>';
+
         hideAllSections();
         viewSection.style.display = "block";
-        saveBtn.style.display = "none";
+        saveBtn.style.display     = "none";
         openModal();
       }
 
-      // ── 2. UPDATE PROGRESS ──────────────────────────────────────────
+      // ── 2. UPDATE PROGRESS ─────────────────────────────────────────
       if (target.classList.contains("update-btn")) {
         document.getElementById("modalTitle").innerText = "Update Progress Note";
-        document.getElementById("progressInput").value  = currentDiagnosis;
+        document.getElementById("progressInput").value  = ""; // blank — user types a new note
         hideAllSections();
         updateSection.style.display = "block";
-        saveBtn.innerText          = "Save Progress";
-        saveBtn.dataset.action     = "update";
-        saveBtn.style.display      = "block";
+        saveBtn.innerText           = "Save Progress";
+        saveBtn.dataset.action      = "update";
+        saveBtn.style.display       = "block";
         openModal();
       }
 
-      // ── 3. ASSIGN DOCTOR ────────────────────────────────────────────
+      // ── 3. ASSIGN DOCTOR ───────────────────────────────────────────
       if (target.classList.contains("assign-btn")) {
         document.getElementById("modalTitle").innerText = "Assign Doctor";
         const prefDateRaw = activeRow.dataset.prefdate || "";
-        document.getElementById("prefDate").value    = prefDateRaw;
+        document.getElementById("prefDate").value     = prefDateRaw;
         document.getElementById("assignedDate").value = activeRow.dataset.assigneddate || "";
         document.getElementById("doctorSelect").value = "";
         hideAllSections();
@@ -90,19 +106,17 @@ document.addEventListener("DOMContentLoaded", () => {
         openModal();
       }
 
-      // ── 4. REMIND PATIENT ────────────────────────────────────────────
+      // ── 4. REMIND PATIENT ──────────────────────────────────────────
       if (target.classList.contains("remind-btn")) {
         document.getElementById("modalTitle").innerText = "Set Patient Reminder";
-        const assignedDate  = activeRow.dataset.assigneddate;
-        const displayField  = document.getElementById("remindDateDisplay");
+        const assignedDate = activeRow.dataset.assigneddate;
+        const displayField = document.getElementById("remindDateDisplay");
 
-        if (assignedDate) {
-          displayField.value = new Date(assignedDate).toLocaleDateString("en-PH", {
-            year: "numeric", month: "long", day: "numeric",
-          });
-        } else {
-          displayField.value = "Pending Doctor Assignment";
-        }
+        displayField.value = assignedDate
+          ? new Date(assignedDate + "T00:00").toLocaleDateString("en-PH", {
+              year: "numeric", month: "long", day: "numeric",
+            })
+          : "Pending Doctor Assignment";
 
         hideAllSections();
         remindSection.style.display = "block";
@@ -119,22 +133,22 @@ document.addEventListener("DOMContentLoaded", () => {
   if (doctorSelect) {
     doctorSelect.addEventListener("change", (e) => {
       const opt = e.target.options[e.target.selectedIndex];
-      const assignedDateInput = document.getElementById("assignedDate");
-      assignedDateInput.value = opt.dataset.avail || "";
+      document.getElementById("assignedDate").value = opt.dataset.avail || "";
 
-      // Show/hide mismatch banner live
       if (mismatchBanner && opt.dataset.avail) {
         const prefDate     = document.getElementById("prefDate").value;
         const assignedDate = opt.dataset.avail;
+        const method       = document.getElementById("notifyMethod").value;
         if (prefDate && prefDate !== assignedDate) {
-          const readablePref     = new Date(prefDate + "T00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" });
-          const readableAssigned = new Date(assignedDate + "T00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" });
-          const method = document.getElementById("notifyMethod").value;
+          const fmt = d => new Date(d + "T00:00").toLocaleDateString("en-PH", {
+            month: "long", day: "numeric", year: "numeric",
+          });
           mismatchBanner.style.display = "block";
           mismatchBanner.innerHTML = `
             <strong>⚠ Schedule mismatch detected.</strong><br>
-            Patient preferred <strong>${readablePref}</strong> — doctor available on <strong>${readableAssigned}</strong>.<br>
-            Saving will dispatch a notification via <em>${method}</em> proposing the new date.
+            Patient preferred <strong>${fmt(prefDate)}</strong> —
+            doctor available on <strong>${fmt(assignedDate)}</strong>.<br>
+            Saving will send a notification via <em>${method}</em> proposing the new date.
           `;
         } else {
           mismatchBanner.style.display = "none";
@@ -143,24 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Update mismatch banner when notification method changes
   const notifyMethod = document.getElementById("notifyMethod");
   if (notifyMethod) {
     notifyMethod.addEventListener("change", () => {
-      // Re-trigger doctor select change to refresh banner text
       doctorSelect?.dispatchEvent(new Event("change"));
     });
   }
 
   // ── Close modal ────────────────────────────────────────────────────────
   document.getElementById("closeModal").addEventListener("click", closeModal);
-
-  // Close on backdrop click
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  // Close on Escape
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal.style.display === "flex") closeModal();
   });
@@ -169,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   saveBtn.addEventListener("click", () => {
     const actionType = saveBtn.dataset.action;
 
-    // --- Update progress ---
+    // --- Update progress (append to log, update cell) ---
     if (actionType === "update") {
       const newText = document.getElementById("progressInput").value.trim();
       if (!newText) {
@@ -177,10 +183,22 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       if (activeRow) {
+        const recordId = activeRow.cells[0].innerText.trim();
+
+        // Timestamp for the new entry
+        const now = new Date().toLocaleDateString("en-PH", {
+          year: "numeric", month: "long", day: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        });
+
+        if (!notesLog[recordId]) notesLog[recordId] = [];
+        notesLog[recordId].push({ date: now, text: newText });
+
+        // Table cell shows the latest note
         activeRow.cells[3].innerText = newText;
       }
       closeModal();
-      showToast("Patient progress note updated successfully.", "success");
+      showToast("Progress note saved. Open History to see all entries.", "success");
     }
 
     // --- Assign doctor ---
@@ -196,17 +214,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (activeRow) {
-        activeRow.cells[4].innerText        = docName;
-        activeRow.dataset.assigneddate      = assignedDate;
+        activeRow.cells[4].innerText   = docName;
+        activeRow.dataset.assigneddate = assignedDate;
       }
 
       closeModal();
 
       if (prefDate !== assignedDate) {
-        const readablePref     = new Date(prefDate + "T00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" });
-        const readableAssigned = new Date(assignedDate + "T00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" });
+        const fmt = d => new Date(d + "T00:00").toLocaleDateString("en-PH", {
+          month: "long", day: "numeric", year: "numeric",
+        });
         showToast(
-          `Mismatch: patient preferred ${readablePref}; assigned ${readableAssigned}. Notification sent via ${method}.`,
+          `Mismatch: preferred ${fmt(prefDate)}, assigned ${fmt(assignedDate)}. Notification sent via ${method}.`,
           "info"
         );
       } else {
@@ -242,13 +261,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ── Staff page search (scoped — won't affect other pages) ─────────────
+  // ── Staff page search ──────────────────────────────────────────────────
   const staffSearch = document.getElementById("staffSearch");
   if (staffSearch && recordsBody) {
     staffSearch.addEventListener("input", () => {
-      const q    = staffSearch.value.toLowerCase().trim();
-      const rows = Array.from(recordsBody.querySelectorAll("tr"));
-      rows.forEach(row => {
+      const q = staffSearch.value.toLowerCase().trim();
+      recordsBody.querySelectorAll("tr").forEach(row => {
         row.classList.toggle("row-hidden", q !== "" && !row.innerText.toLowerCase().includes(q));
       });
     });

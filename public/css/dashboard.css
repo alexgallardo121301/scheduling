@@ -716,9 +716,9 @@
 #psychiatry.tab-content { display: block; }
 
 
-/* ════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════
    Mobile
-   ════════════════════════════════════════════ */
+   ════════════════════════════════════════════════════════ */
 @media (max-width: 700px) {
   .page-wrapper  { padding: 1.5rem 1rem 3rem; }
   .page-title    { font-size: 1.45rem; }
@@ -771,4 +771,48 @@
   .action-group .btn-action { width: auto; align-self: flex-end; margin-top: 4px; }
 
   .table-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+
+/* ════════════════════════════════════════════════════════
+   STAFF RECORDS TABLE — scoped to #staffTableWrap / #recordsTable only
+   Does not affect any other page or table.
+   ════════════════════════════════════════════════════════ */
+
+/* Kill the horizontal scrollbar on the staff table wrapper */
+#staffTableWrap {
+  overflow-x: hidden;
+}
+
+/* Let the browser size columns naturally; we only constrain specific ones */
+#recordsTable {
+  table-layout: auto;
+  width: 100%;
+}
+
+/* Diagnosis column: truncate long notes with ellipsis, never grows unbounded */
+#recordsTable td:nth-child(4) {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action column: shrink to the buttons' natural width, never wraps */
+#recordsTable th:nth-child(6),
+#recordsTable td:nth-child(6) {
+  width: 1px;          /* shrink-to-content in auto layout */
+  white-space: nowrap;
+}
+
+/* Buttons row stays on one line */
+#recordsTable .action-group {
+  flex-wrap: nowrap;
+  gap: 5px;
+}
+
+/* Slightly compact buttons so all four fit without pushing the table wide */
+#recordsTable .btn-action {
+  padding: 6px 11px;
+  font-size: .8rem;
 }

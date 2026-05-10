@@ -31,23 +31,20 @@
   color: var(--deep-green);
   letter-spacing: -.3px;
   flex-shrink: 0;
-  /* Prevent the logo from stretching the navbar taller */
   height: 64px;
   overflow: hidden;
 }
 
-/* SVG inline icon (admin portal) */
 .logo-icon {
   width: 32px;
   height: 32px;
   flex-shrink: 0;
 }
 
-/* <img> logo (index.html / public-facing site) */
 .logo img,
 .logo-img {
   display: block;
-  height: 48px;          /* fits comfortably inside 64 px bar */
+  height: 48px;
   max-height: 48px;
   width: auto;
   object-fit: contain;
@@ -85,13 +82,13 @@
 }
 
 .nav-links a.active-nav {
-  color: var(--dark-green);
-  background: rgba(46, 204, 113, .1);
-  font-weight: 600;
+  color: var(--muted);
+  font-weight: 500;
 }
 
-/* ── Logout button ── */
-.btn-login {
+/* ── Shared base for Login / Logout buttons ── */
+.btn-login,
+.btn-logout {
   margin-left: 10px;
   padding: 7px 18px;
   background: transparent;
@@ -105,7 +102,15 @@
   transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
+/* ── Login button → green on hover ── */
 .btn-login:hover {
+  background: rgba(46, 204, 113, .1);
+  border-color: var(--primary-green);
+  color: var(--dark-green);
+}
+
+/* ── Logout button → red on hover ── */
+.btn-logout:hover {
   background: #fdecea;
   border-color: #e74c3c;
   color: #c0392b;
@@ -140,7 +145,6 @@
   transform-origin: center;
 }
 
-/* Animated X state */
 .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -173,7 +177,8 @@
     padding: 10px 14px;
   }
 
-  .btn-login {
+  .btn-login,
+  .btn-logout {
     margin-left: 0;
     width: 100%;
     margin-top: 4px;
